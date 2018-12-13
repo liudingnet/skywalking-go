@@ -33,7 +33,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("could not register: %v", err)
 	}
-	log.Printf("application key[%v], value[%v]", r.Application.Key, r.Application.Value)
+	log.Printf("application key[%v], value[%v]", r.GetApplication().Key, r.GetApplication().Value)
 
 	time.Sleep(3 * time.Second)
 }

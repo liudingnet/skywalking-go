@@ -18,7 +18,7 @@
 
 syntax = "proto3";
 
-package skywalking_proto;
+
 option java_multiple_files = true;
 option java_package = "org.apache.skywalking.apm.network.proto";
 option csharp_namespace = "SkyWalking.NetworkProtocol";
