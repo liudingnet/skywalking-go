@@ -18,9 +18,7 @@ func excuteSamplingRefreshService(){
 func RegisterApplication(){
 	if !(config.Conf.ApplicationId ==0 ) {
 		client :=GetGrpcClientInstance()
-
-		//client.RegisterApplication(config.Conf.ApplicationCode)
-		client.RegisterApplication("dddddddda")
+		client.RegisterApplication(config.Conf.ApplicationCode)
 
 	}
 }
@@ -36,9 +34,8 @@ func RegisterApplicationInstance(){
 		client :=GetGrpcClientInstance()
 
 
-		//c :=config.Conf.RuntimeEnvironment
-		//client.RegisterApplicationInstance(c.ApplicationInstanceId,c.AgentUUID,getMillis(),*osInfoRequest)
-		client.RegisterApplicationInstance(123,"dasdasdasdasdasdasdasdasd",getMillis(),*osInfoRequest)
+		c :=config.Conf.RuntimeEnvironment
+		client.RegisterApplicationInstance(c.ApplicationInstanceId,c.AgentUUID,getMillis(),*osInfoRequest)
 	}
 }
 

@@ -24,6 +24,7 @@ import (
 	"fmt"
 	"github.com/WithLin/skywalking-go/config"
 	pb "github.com/WithLin/skywalking-go/proto"
+	"github.com/gogo/protobuf/proto"
 	"google.golang.org/grpc"
 	"log"
 	"sync"
@@ -83,9 +84,16 @@ func newGrpcClient()(*GrpcClient,error){
 
 func (c *GrpcClient)RegisterApplication(applicationCode string) {
 	client := pb.NewApplicationRegisterServiceClient(c.conn)
-	//ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	//defer  cancel()
-	client.ApplicationCodeRegister(context.Background(),&pb.Application{ApplicationCode:applicationCode})
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
+	defer  cancel()
+	applicationMapping,err :=client.ApplicationCodeRegister(ctx,&pb.Application{ApplicationCode:applicationCode})
+	if err !=nil {
+		log.Println(err)
+		return
+	}
+	if applicationMapping != nil {
+		 config.Conf.ApplicationId= applicationMapping.GetApplication().Value
+	}
 }
 
 
@@ -104,31 +112,39 @@ osInfoRequest AgentOsInfoRequest){
 
 	applicationInstance.Osinfo.Ipv4S=append(applicationInstance.Osinfo.Ipv4S,osInfoRequest.ipAddress...)
 
-	//ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	//defer  cancel()
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
+	defer  cancel()
 
 	client :=pb.NewInstanceDiscoveryServiceClient(c.conn)
 
-	client.RegisterInstance(context.Background(),applicationInstance)
+	value ,err := client.RegisterInstance(ctx,applicationInstance)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	if value != nil {
+		config.Conf.ApplicationInstanceId=value.GetApplicationInstanceId()
+	}
+
 
 }
 
-func (c *GrpcClient)Heartbeat(applicationInstance int32,heartbeatTime int64){
+func (c *GrpcClient)Heartbeat(){
 	heartbeat :=&pb.ApplicationInstanceHeartbeat{
-		ApplicationInstanceId:applicationInstance,
-		HeartbeatTime:heartbeatTime,
+		ApplicationInstanceId:config.Conf.ApplicationInstanceId,
+		HeartbeatTime:getMillis(),
 	}
 
-	//ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	//defer  cancel()
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
+	defer  cancel()
 
 	client :=pb.NewInstanceDiscoveryServiceClient(c.conn)
-	client.Heartbeat(context.Background(),heartbeat)
+	client.Heartbeat(ctx,heartbeat)
 }
 
 
 func (c *GrpcClient)Collect(requests []TraceSegmentRequest){
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
 	defer  cancel()
 	client :=pb.NewTraceSegmentServiceClient(c.conn)
 
@@ -161,11 +177,10 @@ func traceSegmentRequestMap(request TraceSegmentRequest) *pb.UpstreamSegment{
 	}
 
 
-	segmentByte,err :=traceSegment.Marshal()
+	segmentByte,err :=proto.Marshal(traceSegment)
 	if err !=nil {
-		if err != nil {
-			log.Println(fmt.Sprintf("traceSegment Marshal err :---> %s",err))
-		}
+		log.Println(fmt.Sprintf("traceSegment Marshal err :---> %s",err))
+		return nil
 	}
 	upstreamSegment.Segment=segmentByte
 	return upstreamSegment
