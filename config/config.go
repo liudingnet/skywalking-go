@@ -49,7 +49,7 @@ var Conf  config
 
 
 func init(){
-	Conf.Servers="192.168.199.11:12800"
+	Conf.Servers="localhost:11800"
 	Conf.ApplicationId=1233
 	Conf.ApplicationInstanceId=123232
 	Conf.PendingSegmentLimit=30000

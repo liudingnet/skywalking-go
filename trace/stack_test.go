@@ -35,30 +35,3 @@ func TestStack_Push(t *testing.T) {
 	assert.Equal("2",s.pop())
 	assert.Equal("1",s.pop())
 }
-
-func Test_A(T *testing.T){
-	//conn, err := grpc.Dial("", grpc.WithInsecure())
-	//if err != nil {
-	//	log.Fatalf("did not connect: %v", err)
-	//}
-	//defer conn.Close()
-	//c := pb.NewInstanceDiscoveryServiceClient(conn)
-	//
-	//// Contact the server and print out its response.
-	//name := ""
-	//if len(os.Args) > 1 {
-	//	name = os.Args[1]
-	//}
-	//ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	//defer cancel()
-	//c
-	//r, err := c.Heartbeat(ctx,nil,)
-	//if err != nil {
-	//	log.Fatalf("could not greet: %v", err)
-	//}
-	//
-	//r.
-	//time.Sleep(time.Second)
-	//var a chan  int
-	//close(a)
-}

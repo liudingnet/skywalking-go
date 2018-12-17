@@ -1,8 +1,7 @@
 package main
 
 import (
-	pb "../../proto"
-	"context"
+	"github.com/WithLin/skywalking-go/trace"
 	"google.golang.org/grpc"
 	"log"
 	"time"
@@ -14,9 +13,7 @@ const (
 )
 
 func main() {
-	application := pb.Application{
-		ApplicationCode: applicationCode,
-	}
+
 
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
@@ -24,16 +21,11 @@ func main() {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
-	c := pb.NewApplicationRegisterServiceClient(conn)
-
-	// Contact the server and print out its response.
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-	r, err := c.ApplicationCodeRegister(ctx, &application)
-	if err != nil {
-		log.Fatalf("could not register: %v", err)
+	trace.RegisterApplication()
+	trace.RegisterApplicationInstance()
+	for ; ;  {
+		trace.Heartbeat()
 	}
-	log.Printf("application key[%v], value[%v]", r.GetApplication().Key, r.GetApplication().Value)
 
 	time.Sleep(3 * time.Second)
 }
