@@ -40,8 +40,6 @@ func (c *traceingDispatcher) Dispatch(segment *TraceSegmentRequest) bool{
 	c.segment<-segment
 
 
-	log.Println(fmt.Sprintln("Dispatch trace segment. [SegmentId] = %d",segment.Segment.segmentId))
-
 	return  true
 
 }
