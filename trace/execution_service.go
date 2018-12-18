@@ -41,9 +41,9 @@ func RegisterApplicationInstance(){
 
 func Heartbeat(){
 	client :=GetGrpcClientInstance()
-
-	c :=config.Conf.RuntimeEnvironment
-	client.Heartbeat(c.ApplicationInstanceId,getMillis())
+	//
+	//c :=config.Conf.RuntimeEnvironment
+	client.Heartbeat()
 }
 
 func TraceSegmentTransportService(){

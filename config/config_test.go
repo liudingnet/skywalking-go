@@ -25,9 +25,9 @@ import (
 
 func TestConfig(t *testing.T)  {
 	assert := assert.New(t)
-	assert.Equal(30000,Conf.PendingSegmentLimit)
-	assert.Equal(3000,Conf.Interval)
-	assert.Equal(1000,Conf.PendingSegmentTimeout)
-	assert.Equal(-1,Conf.SamplePer3Secs)
-	assert.Equal(300,Conf.SpanLimitPerSegment)
+	assert.Equal(int32(30000),Conf.PendingSegmentLimit)
+	assert.Equal(int32(3000),Conf.Interval)
+	assert.Equal(int32(1000),Conf.PendingSegmentTimeout)
+	assert.Equal(int32(-1),Conf.SamplePer3Secs)
+	assert.Equal(int32(300),Conf.SpanLimitPerSegment)
 }
