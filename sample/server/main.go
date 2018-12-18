@@ -1,7 +1,7 @@
 package main
 
 import (
-	pb "../../proto"
+	pb "github.com/WithLin/skywalking-go/proto"
 	"context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
